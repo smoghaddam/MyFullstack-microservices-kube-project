@@ -1,0 +1,178 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+parameters:
+  projectname:
+    type: string
+    default: myfullstack-ms-docker-prj
+
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+  aws-cli: circleci/aws-cli@0.1.13
+
+commands:
+  install-dependencies-awscli:
+    description: Install dependencies on aws-cli docker image
+    parameters:
+      extended:
+        default: "no"
+        type: string
+    steps:
+      - run:
+          name: add tar and gzip sudo and node tool
+          become: true
+          command: |
+            yum install -y tar gzip sudo
+            curl –sL https://rpm.nodesource.com/setup_10.x | sudo -E bash -
+
+  install-dependencies-onbase:
+    description: Install dependencies on base docker image
+    parameters:
+      withnode:
+        default: "no"
+        type: string
+    steps:
+      - run:
+          name: executing updates also for ansible and python3
+          command: |
+            sudo apt-get -y update
+            sudo apt-get -y install software-properties-common
+            sudo apt-get -y install ansible curl
+            sudo apt-get -y install python3-venv python-is-python3
+            if [[ << parameters.withnode >> == "yes" ]]
+            then
+              sudo apt-get -y install nodejs npm
+            fi
+
+  destroy-environment-onfail:
+    description: Destroy docker cloudformation stacks given a workflowID.
+    parameters:
+      # Add parameter here
+      cfname:
+        default: "none"
+        type: string
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name "<<parameters.cfname>>"
+
+# Orchestrate or schedule a set of jobs
+workflows:
+  # Name the workflow "welcome"
+  startupdocker:
+    # Run the welcome/run job in its own container
+    jobs:
+      #- deploy-infrastructure
+      - deploy-infrastructure:
+          filters:
+            branches:
+              only: [main]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - configure-hadolint:
+          requires: [configure-infrastructure]
+          # filters:
+          #   branches:
+          #     only: [addinghadolintfeature]
+
+jobs:
+# with rollback - amazon/aws-cli with persistance
+  deploy-infrastructure:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-awscli
+
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/dockerInfra.yml \
+              --tags project=<<pipeline.parameters.projectname>> \
+              --stack-name "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            echo "[docker]" > .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+             --filters "Name=tag:Name,Values=dockerInfra-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+             --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+            cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .circleci/ansible/
+      - save_cache:
+          key: mydockerutils-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+          paths:
+            - /tmp/inventory.txt
+
+      - destroy-environment-onfail:
+          cfname: "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+
+  configure-infrastructure:
+    docker:
+      - image: cimg/base:2021.01
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-onbase
+      - aws-cli/install
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
+      # attach workspace
+      - attach_workspace:
+          at: .
+      - run:
+          name: configure the server user
+          no_output_timeout: 30m
+          command: |
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt
+
+      # Here's where you will add some code to rollback on failure
+#      - destroy-environment-onfail:
+#          cfname: "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+  configure-hadolint:
+    docker:
+      - image: cimg/base:2021.01
+    parameters:
+      pyenvname:
+        type: string
+        default: mydatascience
+
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-onbase
+      #- aws-cli/install
+      - restore_cache:
+          keys:
+            - mydockerutils-
+            - v1-dependencies-
+
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
+      # attach workspace
+      - run:
+          name: configure the server user
+          no_output_timeout: 30m
+          command: |
+            ansible-playbook .circleci/ansible/configure-linter.yml -i  /tmp/inventory.txt --extra-vars "envname=<< parameters.pyenvname >>"
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum ".circleci/ansible/roles/build-by-lint/files/requirements.txt" }}
+

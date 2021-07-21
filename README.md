@@ -1,2 +1,2 @@
 # MyFullstack-microservices-docker-project
- Project example for Docker containerized microservice app deployment on AWS
+ Project template for Docker containerized microservices' app deployment on AWS
