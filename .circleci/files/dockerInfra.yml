@@ -1,5 +1,5 @@
 Description: >
-  elipeople kubernetes fullstack infrastructure
+  elipeople Kubernetes fullstack infrastructure
 
 Parameters:
   ID:
@@ -10,7 +10,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub elipeople-docker-fstackinfra-${ID}
+      GroupName: !Sub elipeople-kube-fstackinfra-${ID}
       GroupDescription: Allow port 22 and 80.
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -26,13 +26,13 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t2.medium
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: MyDevKeyPair # If you use another key pair name, you should change this value to match.
       # If this ami id is not available for you, you can find another (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)
       # Ubuntu 18 or higher works fine
-      ImageId: ami-0ffea00000f287d30
+      ImageId: ami-063d4ab14480ac177
       Tags:
         - Key: Name
-          Value: !Sub dockerProjectInstance-${ID}
+          Value: !Sub KubeProjectInstance-${ID}

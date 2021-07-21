@@ -96,14 +96,14 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/dockerInfra.yml \
               --tags project=<<pipeline.parameters.projectname>> \
-              --stack-name "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             echo "[docker]" > .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
-             --filters "Name=tag:Name,Values=dockerInfra-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --filters "Name=tag:Name,Values=KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
@@ -118,7 +118,7 @@ jobs:
             - /tmp/inventory.txt
 
       - destroy-environment-onfail:
-          cfname: "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
 
   configure-infrastructure:
     docker:
@@ -142,7 +142,7 @@ jobs:
 
       # Here's where you will add some code to rollback on failure
 #      - destroy-environment-onfail:
-#          cfname: "docker-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+#          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
   configure-hadolint:
     docker:
       - image: cimg/base:2021.01
