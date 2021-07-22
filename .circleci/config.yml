@@ -117,8 +117,8 @@ jobs:
           paths:
             - /tmp/inventory.txt
 
-      - destroy-environment-onfail:
-          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+#      - destroy-environment-onfail:
+#          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
 
   configure-infrastructure:
     docker:
