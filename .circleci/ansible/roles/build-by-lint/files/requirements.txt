@@ -1,0 +1,8 @@
+click
+Flask
+numpy
+pandas
+scikit-learn
+pylint
+flasgger
+sensible
