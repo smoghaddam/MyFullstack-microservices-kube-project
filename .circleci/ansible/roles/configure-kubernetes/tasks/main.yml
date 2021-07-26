@@ -2,16 +2,16 @@
 - name: Installing Kubernetes with google-cloud-sdk
   shell: |
     curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
-    sudo tar xvfz google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
-    sudo ./google-cloud-sdk/install.sh
+    tar xvfz google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
+    ./google-cloud-sdk/install.sh --quiet
 
 # if necessary ---> code for gcloud init: 4/1AY0e-g4Hf74LRgPkyebCojjqZrQq7fMvMrcOCvpANkEwAi7nR32UlwHgEqA
 
 - name: Installing kubectl and minikube
   shell: |
-    sudo ./google-cloud-sdk/bin/gcloud --quiet components install kubectl
-    sudo ./google-cloud-sdk/bin/gcloud --quiet components install minikube
+    ./google-cloud-sdk/bin/gcloud --quiet components install kubectl
+    ./google-cloud-sdk/bin/gcloud --quiet components install minikube
 
 - name: starting kubernetes cluster
   shell: |
-    sudo minikube start
+    minikube start
