@@ -14,4 +14,4 @@
 
 - name: starting kubernetes cluster
   shell: |
-    minikube start
+    ./google-cloud-sdk/bin/minikube start
