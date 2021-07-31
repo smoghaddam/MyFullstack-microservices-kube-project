@@ -1,7 +1,7 @@
 ---
 - name: Starting docker
   shell: |
-    service docker start
+    sudo service docker start
 
 - name: verifying docker installation
   become: true

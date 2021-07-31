@@ -6,8 +6,9 @@
     sudo amazon-linux-extras install -y docker
     sudo yum install -y docker
 
- - name: Adding ec2-user to sudo group
+ - name: Adding ec2-user to sudo group and starting docker
    shell: |
+     sudo service docker start
      sudo usermod -aG docker ec2-user
 #     service docker start
 
