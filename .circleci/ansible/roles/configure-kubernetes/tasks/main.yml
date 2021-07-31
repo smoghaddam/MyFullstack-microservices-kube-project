@@ -11,7 +11,3 @@
   shell: |
     ./google-cloud-sdk/bin/gcloud --quiet components install kubectl
     ./google-cloud-sdk/bin/gcloud --quiet components install minikube
-
-- name: starting kubernetes cluster
-  shell: |
-    ./google-cloud-sdk/bin/minikube start

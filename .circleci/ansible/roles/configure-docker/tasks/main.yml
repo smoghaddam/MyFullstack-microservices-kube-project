@@ -6,15 +6,14 @@
     sudo amazon-linux-extras install -y docker
     sudo yum install -y docker
 
-- name: Adding ec2-user to sudo group and starting docker
-  shell: |
-    sudo usermod -aG docker ec2-user
-    newgrp -
-    service docker start
+ - name: Adding ec2-user to sudo group
+   shell: |
+     sudo usermod -aG docker ec2-user
+#     service docker start
 
-- name: verifying docker installation
-  become: true
-  shell: |
-    docker info
+# - name: verifying docker installation
+#   become: true
+#   shell: |
+#     docker info
 
 #mycirclecitoken - 9b7da48e0f98fa971e5cb626c274308605278138

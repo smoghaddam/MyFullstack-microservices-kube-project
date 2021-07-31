@@ -1,0 +1,13 @@
+---
+- name: Starting docker
+  shell: |
+    service docker start
+
+- name: verifying docker installation
+  become: true
+  shell: |
+    docker info
+
+- name: starting kubernetes cluster
+  shell: |
+    ./google-cloud-sdk/bin/minikube start
