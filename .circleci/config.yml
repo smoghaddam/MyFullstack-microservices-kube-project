@@ -72,9 +72,11 @@ workflows:
             branches:
               only: [main]
       - configure-infrastructure:
-          requires: [deploy-infrastructure]
+          #requires: [deploy-infrastructure]
+          requires: [retrieve-instance]
       - configure-hadolint:
-          requires: [configure-infrastructure]
+          #requires: [configure-infrastructure]
+          requires: [retrieve-instance]
           # filters:
           #   branches:
           #     only: [addinghadolintfeature]
