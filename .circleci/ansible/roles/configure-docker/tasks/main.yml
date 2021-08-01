@@ -1,10 +1,18 @@
 ---
+- name: copying ansible.cfg file
+  copy:
+    src: ansible.cfg
+    dest: '~/ansible.cfg'
+
 - name: Installing docker
   shell: |
     sudo yum update -y
     sudo yum install -y git-all
     sudo amazon-linux-extras install -y docker
     sudo yum install -y docker
+
+- name: setting docker
+  shell: |
     systemctl list-unit-files | grep docker
     sudo systemctl enable docker
     sudo systemctl enable docker.socket
