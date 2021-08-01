@@ -5,10 +5,9 @@
     tar xvfz google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
     ./google-cloud-sdk/install.sh --quiet
 
-# if necessary ---> code for gcloud init: 4/1AY0e-g4Hf74LRgPkyebCojjqZrQq7fMvMrcOCvpANkEwAi7nR32UlwHgEqA
 - name: Setting environment variables for kubectl and getting cluster info
   shell: |
-    newpath=$(awk '/PATH*:/ {if (!f) print $0; f = 1}' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
+    newpath=$(awk '/PATH*:/ {{"{""}} if (!f) print $0; f = 1 {{"}""}}' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
     sed -i '/PATH*:/c\'"$newpath" .bash_profile
 
 - name: Installing kubectl and minikube and starting clusters
