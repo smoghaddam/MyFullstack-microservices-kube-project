@@ -13,7 +13,7 @@
     ./google-cloud-sdk/bin/gcloud --quiet components install minikube
     ./google-cloud-sdk/bin/minikube start
 
-- name: setting environment variables for kubectl and getting cluster info
+- name: Setting environment variables for kubectl and getting cluster info
   shell: |
     cd
     newpath=$(awk '/PATH*:/ {if (!f) print $0; f = 1}' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
