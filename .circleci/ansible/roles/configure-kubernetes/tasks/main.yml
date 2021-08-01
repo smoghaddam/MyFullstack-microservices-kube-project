@@ -7,7 +7,7 @@
 
 - name: Setting environment variables for kubectl and getting cluster info
   shell: |
-    newpath=$(awk '/PATH*:/ {{"{""}} if (!f) print $0; f = 1 {{"}""}}' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
+    newpath=$(awk '/PATH*:/ { if (!f) print $0; f = 1 }' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
     sed -i '/PATH*:/c\'"$newpath" .bash_profile
 
 - name: Installing kubectl and minikube and starting clusters

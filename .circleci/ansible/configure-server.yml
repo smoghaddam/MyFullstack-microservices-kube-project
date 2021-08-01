@@ -17,5 +17,6 @@
         msg: "{{ ansible_env }}"
 
   roles:
-    - configure-docker
-    - configure-kubernetes
+    # - configure-docker
+    # - configure-kubernetes
+    - usefultest
