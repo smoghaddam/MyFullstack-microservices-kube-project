@@ -4,8 +4,7 @@
 #     newpath=$(awk '/PATH*:/ { if (!f) print $0; f = 1 }' .bash_profile)':/home/ec2-user/google-cloud-sdk/bin'
 #     sed -i '/PATH*:/c\'"$newpath" .bash_profile
 
-- name: Supports a validate command
-  ansible.builtin.replace:
-    path: /home/ec2-user/.bash_profile
-    regexp: '^PATH=*$'
-    replace: '\1 $PATH:$HOME/.local/bin:$HOME/bin:/home/ec2-user/google-cloud-sdk/bin/'
+- name: Copying bash profile file to remote server
+  ansible.builtin.copy:
+    src: .bash_profile
+    dest: /home/ec2-user/
