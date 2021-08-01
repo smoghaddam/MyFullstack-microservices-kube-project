@@ -18,5 +18,5 @@
 
 - name: Setting environment variables for kubectl and getting cluster info
   shell: |
-    source .bash_profile
+    source "$HOME"/.bash_profile
     kubectl cluster-info
