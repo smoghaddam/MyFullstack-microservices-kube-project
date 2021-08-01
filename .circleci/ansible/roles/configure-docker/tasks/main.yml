@@ -4,24 +4,25 @@
     src: ansible.cfg
     dest: '~/ansible.cfg'
 
-- name: Installing docker
+- name: installing docker
   shell: |
     sudo yum update -y
     sudo yum install -y git-all
     sudo amazon-linux-extras install -y docker
     sudo yum install -y docker
 
-- name: setting docker
+- name: starting docker
+  shell: |
+    sudo service docker start
+
+- name: setting docker for ec2-user and adding ec2-user to docker group
   shell: |
     systemctl list-unit-files | grep docker
     sudo systemctl enable docker
     sudo systemctl enable docker.socket
     sudo chmod 666 /var/run/docker.sock
-
-- name: Adding ec2-user to sudo group and starting docker
-  shell: |
-    sudo service docker start
     sudo usermod -aG docker ec2-user
+
 #     service docker start
 
 # - name: verifying docker installation
