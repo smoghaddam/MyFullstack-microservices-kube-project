@@ -193,7 +193,7 @@ jobs:
           command: |
             echo "[docker]" > .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
-             --filters "Name=tag:Name,Values=KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --filters "Name=tag:Name,Values=KubeProjectInstance" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
