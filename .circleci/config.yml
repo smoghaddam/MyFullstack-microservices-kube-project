@@ -66,20 +66,16 @@ workflows:
   realize-configure-kube-cluster:
     # Run the welcome/run job in its own container
     jobs:
+      - configure-infrastructure
       # - deploy-infrastructure:
-      - retrieve-instance:
-          filters:
-            branches:
-              only: [main]
-      - configure-infrastructure:
-          #requires: [deploy-infrastructure]
-          requires: [retrieve-instance]
-      - configure-hadolint:
-          #requires: [configure-infrastructure]
-          requires: [retrieve-instance]
-          # filters:
-          #   branches:
-          #     only: [addinghadolintfeature]
+      #     filters:
+      #       branches:
+      #         only: [main]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - configure-hadolint:
+      #     requires: [configure-infrastructure]
+
 
 jobs:
 # with rollback - amazon/aws-cli with persistance
