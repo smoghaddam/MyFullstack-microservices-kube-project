@@ -1,5 +1,4 @@
 ---
----
 - name: copying app app.py file
   copy:
     src: {{item}}
