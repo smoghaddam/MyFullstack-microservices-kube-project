@@ -76,8 +76,8 @@ workflows:
               only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - configure-hadolint:
-          requires: [configure-infrastructure]
+      # - configure-hadolint:
+      #     requires: [configure-infrastructure]
 
 
 jobs:

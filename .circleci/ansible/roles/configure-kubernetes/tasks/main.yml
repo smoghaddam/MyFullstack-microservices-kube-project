@@ -18,9 +18,9 @@
 
 - name: setting docker-hub credentials
   shell: |
-    echo $MY_DOCK_PWD > my_password.txt
+    echo "${MY_DOCK_PWD}" > my_password.txt
 
-- name: Setting environment variables for kubectl and getting cluster info
+- name: Setting environment variables for kubectl and starting cluster
   shell: |
     source "$HOME"/.bash_profile
     kubectl cluster-info
