@@ -1,7 +1,7 @@
 setup:
 	# Create python virtualenv & source it
 	# source ~/.devops/bin/activate
-	python3 -m venv _envToSet_
+	python3 -m venv ._envToSet_
 
 install:
 	# This should be run from inside a virtualenv

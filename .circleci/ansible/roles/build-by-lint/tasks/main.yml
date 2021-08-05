@@ -27,24 +27,21 @@
 - name: copying app Makefile file
   copy:
     src: model_data
-    dest: '~/{{ envname }}/model_data'
+    dest: '~/{{ envname }}/'
 
 - name: Setting virtualenv and installing hadolint
 #  become: true
   shell: |
-    python3 -m venv "{{ envname }}"
-    source "{{ envname }}/bin/activate"
-    cd "{{ envname }}"
-    sudo chmod ugo+rw app.py Dockerfile requirements.txt Makefile
-    sed -i 's/_envToSet_/{{ envname }}/g' Makefile
-    make install
-    # Install hadolint
-    sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
-    sudo chmod +x /bin/hadolint
+    make setup
+    source ".{{ envname }}/bin/activate"
+    make install lint
+# python3 -m venv "{{ envname }}"
+# source "{{ envname }}/bin/activate"
+# cd "{{ envname }}"
+# sudo chmod ugo+rw app.py Dockerfile requirements.txt Makefile
+# sed -i 's/_envToSet_/{{ envname }}/g' Makefile
+# make install
+# # Install hadolint
+# sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+# sudo chmod +x /bin/hadolint
 
-- name: Installing circleci CLI
-#become: true
-  shell: |
-    sudo curl -o /usr/local/bin/circleci https://circle-downloads.s3.amazonaws.com/releases/build_agent_wrapper/circleci && sudo chmod +x /usr/local/bin/circleci
-    sudo setfacl --modify user:ec2-user:rw /var/run/docker.sock
-    sudo setfacl --modify user:ec2-user:rwx /usr/local/bin/circleci
