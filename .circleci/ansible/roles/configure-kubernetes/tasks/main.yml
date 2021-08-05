@@ -16,6 +16,10 @@
     src: .bash_profile
     dest: /home/ec2-user/
 
+- name: setting docker-hub credentials
+  shell: |
+    echo $MY_DOCK_PWD > my_password.txt
+
 - name: Setting environment variables for kubectl and getting cluster info
   shell: |
     source "$HOME"/.bash_profile

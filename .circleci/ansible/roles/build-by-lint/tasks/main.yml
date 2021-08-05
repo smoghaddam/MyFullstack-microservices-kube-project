@@ -24,6 +24,11 @@
     src: Makefile
     dest: '~/{{ envname }}/Makefile'
 
+- name: copying app Makefile file
+  copy:
+    src: model_data
+    dest: '~/{{ envname }}/model_data'
+
 - name: Setting virtualenv and installing hadolint
 #  become: true
   shell: |
