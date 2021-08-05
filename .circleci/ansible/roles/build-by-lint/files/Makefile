@@ -8,8 +8,8 @@ install:
 	pip install --upgrade pip &&\
 		pip install -r requirements.txt
 	#apt-get install sudo
-	wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
-	chmod +x /bin/hadolint
+	sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+	sudo chmod +x /bin/hadolint
 
 test:
 	# Additional, optional, tests could go here
