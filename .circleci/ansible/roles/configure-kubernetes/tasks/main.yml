@@ -1,4 +1,13 @@
 ---
+---
+- name: copying app app.py file
+  copy:
+    src: {{item}}
+    dest: '~/'
+    mode: 0774
+    with-items:
+      ['run_docker.sh', 'run_kubernetes.sh', 'upload_docker.sh', 'make_prediction.sh']
+
 - name: Installing Kubernetes with google-cloud-sdk
   shell: |
     curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
@@ -24,3 +33,4 @@
   shell: |
     source "$HOME"/.bash_profile
     kubectl cluster-info
+    ./run_kubernetes.sh

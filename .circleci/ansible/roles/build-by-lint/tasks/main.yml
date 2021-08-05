@@ -7,22 +7,22 @@
 - name: copying app app.py file
   copy:
     src: app.py
-    dest: '~/{{ envname }}/app.py'
+    dest: '~/'
 
 - name: copying app Dockerfile file
   copy:
     src: Dockerfile
-    dest: '~/{{ envname }}/Dockerfile'
+    dest: '~/'
 
 - name: copying app requirements.txt file
   copy:
     src: requirements.txt
-    dest: '~/{{ envname }}/requirements.txt'
+    dest: '~/'
 
 - name: copying app Makefile file
   copy:
     src: Makefile
-    dest: '~/{{ envname }}/Makefile'
+    dest: '~/'
 
 - name: copying app Makefile file
   copy:
