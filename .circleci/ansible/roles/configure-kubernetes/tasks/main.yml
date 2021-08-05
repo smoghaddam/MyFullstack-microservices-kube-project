@@ -1,10 +1,10 @@
 ---
 - name: copying app app.py file
   copy:
-    src: {{item}}
+    src: "{{ item }}"
     dest: '~/'
     mode: 0774
-    with-items:
+    with_items:
       ['run_docker.sh', 'run_kubernetes.sh', 'upload_docker.sh', 'make_prediction.sh']
 
 - name: Installing Kubernetes with google-cloud-sdk
