@@ -19,8 +19,9 @@ Resources:
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 80
-          ToPort: 80
+          ToPort: 40000
           CidrIp: 0.0.0.0/0
+
 
 
   EC2Instance:

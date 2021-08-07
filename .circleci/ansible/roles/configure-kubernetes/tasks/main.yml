@@ -33,6 +33,8 @@
 
 - name: Setting environment variables for kubectl and starting cluster
   shell: |
-    source "$HOME"/.bash_profile
+    cd
+    echo $HOME/.bash_profile
+    source .bash_profile
     kubectl cluster-info
     ./run_kubernetes.sh
