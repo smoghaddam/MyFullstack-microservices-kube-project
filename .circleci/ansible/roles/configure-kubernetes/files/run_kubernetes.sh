@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -o nounset
+set -o errexit
+set -o xtrace
 # This tags and uploads an image to Docker Hub
 
 # Step 1:
@@ -10,9 +13,12 @@ dockerpath=eliddocker/myproject-repo
 # Run the Docker Hub container with kubernetes
 # Pull image secret was loaded into kubectl serviceaccount edited with:
 #      kubectl edit serviceaccount default
+kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json --type=kubernetes.io/dockerconfigjson
+
 # and addint the following:
-#   imagePullSecrets:
-#   - name: regcred
+#   imagePullSecrets:   - name: regcred
+kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "regcred"}]}'
+
 kubectl create deployment eli-deploy --image=eliddocker/myproject-repo:udaproject
 
 # Step 3:
