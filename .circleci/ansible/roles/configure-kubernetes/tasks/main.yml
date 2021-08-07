@@ -29,11 +29,13 @@
 
 - name: setting docker-hub credentials
   command: |
+    pwd > tracing.log
     echo ${MY_DOCK_PWD} > my_password.txt
 
 - name: Setting environment variables for kubectl and starting cluster
   shell: |
     cd
+    pwd >> tracing.log
     echo $HOME/.bash_profile >> tracing.log
     source .bash_profile
     kubectl cluster-info >> tracing.log
