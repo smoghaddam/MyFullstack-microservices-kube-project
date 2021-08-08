@@ -12,6 +12,7 @@
 
 - name: Installing Kubernetes with google-cloud-sdk
   shell: |
+    echo {{ dockhub }} > my_password.txt
     curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
     tar xvfz google-cloud-sdk-342.0.0-linux-x86_64.tar.gz
     ./google-cloud-sdk/install.sh --quiet
@@ -29,7 +30,7 @@
 
 - name: setting docker-hub credentials
   shell: |
-    echo $DOCKER_HUB_PWD > my_password.txt
+    echo {{ dockhub }} > my_password.txt
     cat ~/my_password.txt | docker login --username eliddocker --password-std in >> tracing.log 2>&1
     kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json --type=kubernetes.io/dockerconfigjson >> tracing.log 2>&1
     kubectl get secrets regcred >> tracing.log 2>&1
