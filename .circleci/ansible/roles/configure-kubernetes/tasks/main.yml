@@ -32,13 +32,12 @@
   shell: |
     echo {{ dockhub }} > my_password.txt
     cat ~/my_password.txt | docker login --username eliddocker --password-stdin >> tracing.log 2>&1
-    kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json --type=kubernetes.io/dockerconfigjson >> tracing.log 2>&1
-    kubectl get secrets regcred >> tracing.log 2>&1
 
 - name: Setting environment variables for kubectl and starting cluster
   shell: |
-    cd
     echo $HOME/.bash_profile >> tracing.log 2>&1
     source $HOME/.bash_profile >> tracing.log 2>&1
+    kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json --type=kubernetes.io/dockerconfigjson >> tracing.log 2>&1
+    kubectl get secrets regcred >> tracing.log 2>&1
     kubectl cluster-info >> tracing.log 2>&1
     ./run_kubernetes.sh >> tracing.log 2>&1
