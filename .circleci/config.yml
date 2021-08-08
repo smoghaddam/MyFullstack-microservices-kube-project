@@ -143,7 +143,7 @@ jobs:
           name: configure the server user
           no_output_timeout: 30m
           command: |
-            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >>"
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockpwd=$MY_DOCK_PWD"
 
       # Here's where you will add some code to rollback on failure
 #      - destroy-environment-onfail:
