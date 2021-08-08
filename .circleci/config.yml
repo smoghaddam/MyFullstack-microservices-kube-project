@@ -74,8 +74,12 @@ workflows:
           filters:
             branches:
               only: [main]
-      - configure-infrastructure:
+      - configure-docker:
           requires: [deploy-infrastructure]
+      - build-and-lint:
+          requires: [configure-docker]
+      - configure-kubernetes:
+          requires: [build-and-lint]
       # - configure-hadolint:
       #     requires: [configure-infrastructure]
 
@@ -121,7 +125,7 @@ jobs:
 #      - destroy-environment-onfail:
 #          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
 
-  configure-infrastructure:
+  configure-docker:
     docker:
       - image: cimg/base:2021.01
     parameters:
@@ -146,6 +150,58 @@ jobs:
             DOCKER_HUB_PWD: $MY_DOCK_PWD
           command: |
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockhub=$MY_DOCK_PWD"
+
+  build-and-lint:
+    docker:
+      - image: cimg/base:2021.01
+    parameters:
+      pyenvname:
+        type: string
+        default: mydatascience
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-onbase
+      - aws-cli/install
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
+      # attach workspace
+      - attach_workspace:
+          at: .
+      - run:
+          name: configure the server user
+          no_output_timeout: 30m
+          environment:
+            DOCKER_HUB_PWD: $MY_DOCK_PWD
+          command: |
+            ansible-playbook .circleci/ansible/build-and-lint.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockhub=$MY_DOCK_PWD"
+
+  configure-kubernetes:
+    docker:
+      - image: cimg/base:2021.01
+    parameters:
+      pyenvname:
+        type: string
+        default: mydatascience
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-onbase
+      - aws-cli/install
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
+      # attach workspace
+      - attach_workspace:
+          at: .
+      - run:
+          name: configure the server user
+          no_output_timeout: 30m
+          environment:
+            DOCKER_HUB_PWD: $MY_DOCK_PWD
+          command: |
+            ansible-playbook .circleci/ansible/configure-kubernetes.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockhub=$MY_DOCK_PWD"
 
       # Here's where you will add some code to rollback on failure
 #      - destroy-environment-onfail:
