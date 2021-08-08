@@ -142,8 +142,10 @@ jobs:
       - run:
           name: configure the server user
           no_output_timeout: 30m
+          environment:
+            DOCKER_HUB_PWD: $MY_DOCK_PWD
           command: |
-            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockpwd=$MY_DOCK_PWD"
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >>"
 
       # Here's where you will add some code to rollback on failure
 #      - destroy-environment-onfail:
