@@ -18,5 +18,3 @@
 
   roles:
     - configure-docker
-    - build-by-lint
-    - configure-kubernetes
