@@ -18,4 +18,3 @@
 
   roles:
     - build-by-lint
-    - configure-kubernetes
