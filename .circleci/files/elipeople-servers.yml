@@ -5,12 +5,16 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
+  EnvironmentName:
+      Description: an environment name that will be prefixed to resources
+      Type: String
+
 
 Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub elipeople-kube-fstackinfra-${ID}
+      GroupName: !Sub ${EnvironmentName}-${ID}
       GroupDescription: Allow port 22 and 80.
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -21,8 +25,9 @@ Resources:
           FromPort: 80
           ToPort: 40000
           CidrIp: 0.0.0.0/0
-
-
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-${ID}-SG
 
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -42,4 +47,4 @@ Resources:
             DeleteOnTermination: 'true'
       Tags:
         - Key: Name
-          Value: !Sub KubeProjectInstance-${ID}
+          Value: !Sub KubeProjectInstance-${EnvironmentName}-${ID}
