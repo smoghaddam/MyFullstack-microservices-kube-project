@@ -128,7 +128,7 @@ jobs:
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             echo "[docker:vars] >> .circleci/ansible/inventory.txt
-            echo "ansible_ssh_common_args=‘-o ProxyCommand=\"ssh -W %h:%p -q ec2-user@$BASTIONIP’"
+            echo 'ansible_ssh_common_args="-o ProxyCommand=ssh -W %h:%p -q ec2-user@$BASTIONIP"'
             cat .circleci/ansible/inventory.txt
             cp .circleci/ansible/inventory.txt /tmp/inventory.txt
 
