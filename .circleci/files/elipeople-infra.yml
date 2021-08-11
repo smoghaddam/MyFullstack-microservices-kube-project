@@ -169,4 +169,30 @@ Resources:
             DeleteOnTermination: 'true'
       Tags:
         - Key: Name
-          Value: !Sub KubeProjectInstance-${EnvironmentName}-${ID}
+          Value: !Sub ${EnvironmentName}-KubeProjectInstance-${ID}
+
+  BastionHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y
+          sudo aws s3 cp s3://myudaprojectbucket/myWSkp2.pem .
+          chmod 400 myWSkp2.pem
+      ImageId: ami-0bb3fad3c0286ebd5
+      KeyName: myWSkp2
+      IamInstanceProfile: !Ref S3ReadOnlyRolesProfile
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: "true"
+        DeviceIndex: 0
+        GroupSet:
+        - Ref: MyEC2SecurityGroup
+        SubnetId: !Ref PublicSubnet1
+      BlockDeviceMappings:
+      - DeviceName: "/dev/xvda"
+        Ebs:
+          VolumeSize: 8
+      Tags:
+      - Key: Name
+        Value: !Sub elipeople-${EnvironmentName}-BASTION-HOST
