@@ -102,8 +102,8 @@ jobs:
               --template-file .circleci/files/elipeople-infra.yml \
               --tags project=<<pipeline.parameters.projectname>> \
               --stack-name "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameters file:///.circleci/files/elipeople-infra-params.json \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" EnvironmentName="elipeople-kube-fstackinfra" \
+              VpcCIDR="10.0.0.0/16" PrivateSubnet1CIDR="10.0.1.0/24" PublicSubnet1CIDR="10.0.3.0/24"
 
       - run:
           name: Add back-end ip to ansible inventory
