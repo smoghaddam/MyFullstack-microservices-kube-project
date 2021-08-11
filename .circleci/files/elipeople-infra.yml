@@ -171,6 +171,12 @@ Resources:
         - Key: Name
           Value: !Sub ${EnvironmentName}-KubeProjectInstance-${ID}
 
+  S3ReadOnlyRolesProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - MyRole-EC2ReadOnlyAccessToS3
+
   BastionHost:
     Type: AWS::EC2::Instance
     Properties:
@@ -187,7 +193,7 @@ Resources:
       - AssociatePublicIpAddress: "true"
         DeviceIndex: 0
         GroupSet:
-        - Ref: MyEC2SecurityGroup
+        - Ref: InstanceSecurityGroup
         SubnetId: !Ref PublicSubnet1
       BlockDeviceMappings:
       - DeviceName: "/dev/xvda"
