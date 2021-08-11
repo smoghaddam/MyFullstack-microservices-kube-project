@@ -201,4 +201,4 @@ Resources:
           VolumeSize: 8
       Tags:
       - Key: Name
-        Value: !Sub elipeople-${EnvironmentName}-BASTION-HOST
+        Value: !Sub ${EnvironmentName}-BASTION-HOST

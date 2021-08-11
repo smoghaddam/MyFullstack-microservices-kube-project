@@ -112,7 +112,7 @@ jobs:
           command: |
             echo "[bastion]" > .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
-             --filters "Name=tag:Name,Values=elipeople-${EnvironmentName}-${CIRCLE_WORKFLOW_ID:0:7}-BASTION-HOST" \
+             --filters "Name=tag:Name,Values=${EnvironmentName}-BASTION-HOST" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
