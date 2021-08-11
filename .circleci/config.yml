@@ -106,16 +106,33 @@ jobs:
               VpcCIDR="10.0.0.0/16" PrivateSubnet1CIDR="10.0.1.0/24" PublicSubnet1CIDR="10.0.3.0/24" \
               --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 
+
       - run:
-          name: Add back-end ip to ansible inventory
+          name: Add bastion ip to ansible inventory
           command: |
-            echo "[docker]" > .circleci/ansible/inventory.txt
+            echo "[bastion]" > .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
-             --filters "Name=tag:Name,Values=elipeople-kube-fstackinfra-KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --filters "Name=tag:Name,Values=elipeople-${EnvironmentName}-${CIRCLE_WORKFLOW_ID:0:7}-BASTION-HOST" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
             cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            BASTIONIP = tail -1 .circleci/ansible/inventory.txt
+            echo "[docker]" >> .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+             --filters "Name=tag:Name,Values=elipeople-kube-fstackinfra-KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+             --output text >> .circleci/ansible/inventory.txt
+            echo "[docker:vars] >> .circleci/ansible/inventory.txt
+            echo "ansible_ssh_common_args: ‘-o ProxyCommand=\"ssh -W %h:%p -q ec2-user@$BASTIONIP’"
+            cat .circleci/ansible/inventory.txt
+            cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+
+
       - persist_to_workspace:
           root: .
           paths:
@@ -142,7 +159,8 @@ jobs:
       - aws-cli/install
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
+          fingerprint: ["fa:a7:11:2e:80:11:0b:f4:15:07:b9:77:f5:d3:be:99"]
+          #fingerprint: ["b9:cc:7c:72:0f:26:e0:19:33:f4:26:2c:94:77:a1:e7"]
       # attach workspace
       - attach_workspace:
           at: .
