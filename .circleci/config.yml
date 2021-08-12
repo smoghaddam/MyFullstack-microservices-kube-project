@@ -116,19 +116,20 @@ jobs:
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+#cp .circleci/ansible/inventory.txt /tmp/inventory.txt
 
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             BASTIONIP=$(tail -1 .circleci/ansible/inventory.txt)
+            echo "bastionip = $BASTIONIP or ${BASTIONIP}"
             echo "[docker]" >> .circleci/ansible/inventory.txt
             aws ec2 describe-instances \
              --filters "Name=tag:Name,Values=<<pipeline.parameters.projectname>>-KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text >> .circleci/ansible/inventory.txt
             echo "[docker:vars]" >> .circleci/ansible/inventory.txt
-            echo ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q ec2-user@$BASTIONIP"' >> .circleci/ansible/inventory.txt
+            echo ansible_ssh_common_args='-o ProxyCommand="ssh -A -o StrictHostKeyChecking=no -W %h:%p -q ec2-user@${BASTIONIP}"' >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
             cp .circleci/ansible/inventory.txt /tmp/inventory.txt
 
