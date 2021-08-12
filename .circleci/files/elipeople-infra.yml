@@ -184,8 +184,7 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash
           apt-get update -y
-          sudo aws s3 cp s3://elipeople-bucket/MyDevKeyPair.pem
-/home/ec2-user
+          sudo aws s3 cp s3://elipeople-bucket/MyDevKeyPair.pem /home/ec2-user
           chmod 400 MyDevKeyPair.pem
       ImageId: ami-0bb3fad3c0286ebd5
       KeyName: myWSkp2
