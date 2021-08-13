@@ -86,6 +86,63 @@ workflows:
 
 jobs:
 # with rollback - amazon/aws-cli with persistance
+  deploy-infrastructure-withjump:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - install-dependencies-awscli
+
+      - run:
+          name: Creating backend servers
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/elipeople-infra.yml \
+              --tags project=<<pipeline.parameters.projectname>> \
+              --stack-name "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" EnvironmentName="<<pipeline.parameters.projectname>>" \
+              VpcCIDR="10.0.0.0/16" PrivateSubnet1CIDR="10.0.1.0/24" PublicSubnet1CIDR="10.0.3.0/24" \
+              --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+
+
+      - run:
+          name: Add bastion ip to ansible inventory
+          command: |
+            echo "[bastion]" > .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+             --filters "Name=tag:Name,Values=<<pipeline.parameters.projectname>>-BASTION-HOST" \
+             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+             --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+#cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            BASTIONIP=$(tail -1 .circleci/ansible/inventory.txt)
+            echo "bastionip = $BASTIONIP or ${BASTIONIP}"
+            echo "[docker]" >> .circleci/ansible/inventory.txt
+            aws ec2 describe-instances \
+             --filters "Name=tag:Name,Values=<<pipeline.parameters.projectname>>-KubeProjectInstance-${CIRCLE_WORKFLOW_ID:0:7}" \
+             --query 'Reservations[*].Instances[*].PrivateIpAddress' \
+             --output text >> .circleci/ansible/inventory.txt
+            echo "[docker:vars]" >> .circleci/ansible/inventory.txt
+            echo ansible_ssh_common_args=\'-o ProxyCommand=\"ssh -i ~/MyDevKeyPair.pem -A -o StrictHostKeyChecking=no -W %h:%p -q ec2-user@${BASTIONIP}\"\' >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+            cp .circleci/ansible/inventory.txt /tmp/inventory.txt
+
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .circleci/ansible/
+      - save_cache:
+          key: mydockerutils-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+          paths:
+            - /tmp/inventory.txt
+
   deploy-infrastructure:
     docker:
       # Docker image here that supports AWS CLI
