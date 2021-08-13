@@ -3,7 +3,7 @@ set -o nounset
 set -o errexit
 set -o xtrace
 
-PORT=$(kubectl get services/eli-deploy -o go-template='{{(index .spec.ports 0).nodePort}}')
+PORT=$(kubectl get services/eli-service -o go-template='{{(index .spec.ports 0).nodePort}}')
 echo "Port: $PORT"
 
 # POST method predict

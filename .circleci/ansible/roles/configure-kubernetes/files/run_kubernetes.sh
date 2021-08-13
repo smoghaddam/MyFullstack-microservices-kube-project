@@ -25,4 +25,4 @@ kubectl get pods
 
 # Step 4:
 # Forward the container port to a host
-kubectl expose deployment/eli-deploy --type="NodePort" --port 80
+kubectl expose deployment/eli-deploy --type="NodePort" --port 80 --service-name=eli-service
