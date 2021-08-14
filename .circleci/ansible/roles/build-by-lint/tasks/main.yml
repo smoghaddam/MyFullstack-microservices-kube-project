@@ -29,14 +29,15 @@
     src: model_data
     dest: '~/{{ envname }}/'
 
-- name: Setting virtualenv and installing hadolint
+- name: Setting venv, installing hadolint, runnint on docker
 #  become: true
   shell: |
     sudo chmod ugo+rw app.py Dockerfile requirements.txt Makefile
     sed -i 's/_envToSet_/{{ envname }}/g' Makefile
     make setup
     source ".{{ envname }}/bin/activate"
-    make install lint
+    make install
+    make lint
 # python3 -m venv "{{ envname }}"
 # source "{{ envname }}/bin/activate"
 # cd "{{ envname }}"

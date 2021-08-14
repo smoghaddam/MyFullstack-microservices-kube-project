@@ -40,4 +40,4 @@
     kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/ec2-user/.docker/config.json --type=kubernetes.io/dockerconfigjson >> tracing.log 2>&1
     kubectl get secrets regcred >> tracing.log 2>&1
     kubectl cluster-info >> tracing.log 2>&1
-    ./run_kubernetes.sh >> tracing.log 2>&1
+    ./run_deploykubeblueapp.sh >> tracing.log 2>&1

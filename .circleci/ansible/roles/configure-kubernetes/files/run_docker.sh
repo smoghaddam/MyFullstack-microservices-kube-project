@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-
+set -o nounset
+set -o errexit
+set -o xtrace
 ## Complete the following steps to get Docker running locally
 
 # Step 1:

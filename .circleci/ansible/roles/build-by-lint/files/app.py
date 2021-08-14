@@ -65,7 +65,7 @@ def predict():
     # TO DO:  Log the output prediction value
     LOG.info(f"Trained model Prediction for specified params: \n{prediction[0]}")
     #return jsonify({'prediction': prediction})
-    return jsonify({'prediction': prediction})
+    return jsonify({'app_version': "This is the GREEN Version of House prediction app", 'prediction': prediction})
 
 if __name__ == "__main__":
     # load pretrained model as clf

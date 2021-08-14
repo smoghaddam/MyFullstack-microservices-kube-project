@@ -1,5 +1,8 @@
 FROM python:3.7.3-stretch
 
+# Volontary failure..
+!->>>>>
+
 ## Step 1:
 # Create a working directory
 WORKDIR /app
