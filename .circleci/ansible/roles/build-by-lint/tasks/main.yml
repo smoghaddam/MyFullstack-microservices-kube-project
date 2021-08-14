@@ -48,7 +48,7 @@
     make install
 
 
-- name: runnint on docker
+- name: liting docker and running application
 #  become: true
   shell: |
     make lint
