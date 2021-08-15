@@ -8,5 +8,7 @@
 
 - name: Setting environment variables for kubectl and starting cluster
   shell: |
+    echo $HOME/.bash_profile >> tracing.log 2>&1
+    source $HOME/.bash_profile >> tracing.log 2>&1
     kubectl cluster-info >> tracing.log 2>&1
     ./run_deploykubegreenapp.sh >> tracing.log 2>&1
