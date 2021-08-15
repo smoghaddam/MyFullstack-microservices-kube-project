@@ -75,9 +75,9 @@ workflows:
             branches:
               only: [main]
       - configure-docker:
-          requires: [configure-docker]
+          requires: [deploy-infrastructure]
       - configure-kubernetes:
-          requires: [build-and-lint]
+          requires: [configure-docker]
       - build-and-lint:
           requires: [configure-kubernetes]
       # - configure-hadolint:
