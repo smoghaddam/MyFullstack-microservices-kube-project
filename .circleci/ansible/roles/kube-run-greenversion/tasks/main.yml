@@ -18,7 +18,7 @@
     PREDICTION=$(./make_prediction.sh)
 
     SUB='NEW ROLLING VERSION'
-    if [[ "$STR" == *"$SUB"* ]]; then
+    if [[ "$PREDICTION" == *"$SUB"* ]]; then
       echo "NEW ROLLING VERSION is up and running"
     else
       exit 1

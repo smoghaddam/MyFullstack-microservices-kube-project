@@ -44,7 +44,7 @@
     source $HOME/.bash_profile >> tracing.log 2>&1
     PREDICTION=$(./make_prediction.sh)
     SUB='NEW ROLLING VERSION'
-    if [[ "$STR" != *"$SUB"* ]]; then
+    if [[ "$PREDICTION" != *"$SUB"* ]]; then
       echo "Blue version is up and running"
     else
       exit 1

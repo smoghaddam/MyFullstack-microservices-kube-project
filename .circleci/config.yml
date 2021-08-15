@@ -78,10 +78,10 @@ workflows:
           requires: [deploy-infrastructure]
       - install-kube-with-blueversion:
           requires: [configure-docker]
-      - build-and-lint:
+      - lint-build-and-upload-green-image:
           requires: [install-kube-with-blueversion]
       - deploy-greenversion:
-          requires: [build-and-lint]
+          requires: [lint-build-and-upload-green-image]
       # - configure-hadolint:
       #     requires: [configure-infrastructure]
 
@@ -107,7 +107,6 @@ jobs:
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" EnvironmentName="<<pipeline.parameters.projectname>>" \
               VpcCIDR="10.0.0.0/16" PrivateSubnet1CIDR="10.0.1.0/24" PublicSubnet1CIDR="10.0.3.0/24" \
               --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
-
 
       - run:
           name: Add bastion ip to ansible inventory
@@ -176,7 +175,6 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cp .circleci/ansible/inventory.txt /tmp/inventory.txt
 
-
       - persist_to_workspace:
           root: .
           paths:
@@ -186,8 +184,8 @@ jobs:
           paths:
             - /tmp/inventory.txt
 
-#      - destroy-environment-onfail:
-#          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment-onfail:
+          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
 
   configure-docker:
     docker:
@@ -216,7 +214,10 @@ jobs:
           command: |
             ansible-playbook .circleci/ansible/configure-docker.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockhub=$MY_DOCK_PWD"
 
-  build-and-lint:
+      - destroy-environment-onfail:
+          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
+
+  lint-build-and-upload-green-image:
     docker:
       - image: cimg/base:2021.01
     parameters:
@@ -241,6 +242,9 @@ jobs:
             DOCKER_HUB_PWD: $MY_DOCK_PWD
           command: |
             ansible-playbook .circleci/ansible/build-and-lint.yml -i .circleci/ansible/inventory.txt --extra-vars "envname=<< parameters.pyenvname >> dockhub=$MY_DOCK_PWD"
+
+      - destroy-environment-onfail:
+          cfname: "kube-stack-${CIRCLE_WORKFLOW_ID:0:7}"
 
   install-kube-with-blueversion:
     docker:
