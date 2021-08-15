@@ -1,7 +1,7 @@
 FROM python:3.7.3-stretch
 
 # Volontary failure..
-!->>>Something to force Docker linting failure>>
+#!->>>Something to force Docker linting failure>>
 
 ## Step 1:
 # Create a working directory
