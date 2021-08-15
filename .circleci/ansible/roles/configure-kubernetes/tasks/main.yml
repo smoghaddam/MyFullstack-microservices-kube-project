@@ -38,3 +38,13 @@
     kubectl get secrets regcred >> tracing.log 2>&1
     kubectl cluster-info >> tracing.log 2>&1
     ./run_deploykubeblueapp.sh >> tracing.log 2>&1
+
+- name: Checking for a valid blue version
+  shell: |
+    PREDICTION=$(./make_prediction.sh)
+    SUB='NEW ROLLING VERSION'
+    if [[ "$STR" != *"$SUB"* ]]; then
+      echo "Blue version is up and running"
+    else
+      exit 1
+    fi

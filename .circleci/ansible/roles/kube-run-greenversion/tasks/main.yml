@@ -12,3 +12,13 @@
     source $HOME/.bash_profile >> tracing.log 2>&1
     kubectl cluster-info >> tracing.log 2>&1
     ./run_deploykubegreenapp.sh >> tracing.log 2>&1
+
+- name: Checking for a valid NEW ROLLING version
+  shell: |
+    PREDICTION=$(./make_prediction.sh)
+    SUB='NEW ROLLING VERSION'
+    if [[ "$STR" == *"$SUB"* ]]; then
+      echo "NEW ROLLING VERSION is up and running"
+    else
+      exit 1
+    fi
