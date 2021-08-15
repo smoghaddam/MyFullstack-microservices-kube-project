@@ -1,0 +1,12 @@
+- name: copying app  file
+  copy:
+    src: "{{ item }}"
+    dest: ~/
+    mode: 0774
+  with_items:
+    - run_deploykubegreenapp.sh
+
+- name: Setting environment variables for kubectl and starting cluster
+  shell: |
+    kubectl cluster-info >> tracing.log 2>&1
+    ./run_deploykubegreenapp.sh >> tracing.log 2>&1

@@ -5,7 +5,7 @@
     dest: ~/
     mode: 0774
   with_items:
-    - run_kubernetes.sh
+    - run_deploykubeblueapp.sh
     - make_prediction.sh
 
 - name: Installing Kubernetes with google-cloud-sdk
