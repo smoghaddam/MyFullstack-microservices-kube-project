@@ -36,7 +36,7 @@
 - name: copying app Makefile file
   copy:
     src: model_data
-    dest: '~/{{ envname }}/'
+    dest: '~/'
 
 - name: Setting venv, installing hadolint, runnint on docker
 #  become: true
