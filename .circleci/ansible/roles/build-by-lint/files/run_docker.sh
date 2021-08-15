@@ -6,12 +6,12 @@ set -o xtrace
 
 # Step 1:
 # Build image and add a descriptive tag
-docker build --tag=mydockerapi .
+docker build --tag=mynewdockerapi .
 
 # Step 2:
 # List docker images
-docker images ls
+docker images
 
 # Step 3:
-# Run flask app
-docker run -d -p 8080:80 mydockerapi
+# uncomment the row bellow to Run flask app
+#docker run -d -p 8080:80 mydockerapi

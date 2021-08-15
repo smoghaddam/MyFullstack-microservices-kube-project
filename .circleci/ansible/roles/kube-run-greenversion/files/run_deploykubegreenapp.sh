@@ -10,7 +10,7 @@ set -o xtrace
 dockerpath=eliddocker/myproject-repo
 
 # Step 2
-kubectl set image deployment/eli-deploy --image=eliddocker/myproject-repo:udaproject:v2
+kubectl set image deployment/eli-deploy --image=eliddocker/myproject-repo:predict_greenversion
 
 # Step 3:
 # List kubernetes pods

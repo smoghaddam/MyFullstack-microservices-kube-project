@@ -55,9 +55,15 @@
     source ".{{ envname }}/bin/activate"
     make lint
 
+- name: building and tagging new app image
+#  become: true
+  shell: |
+    ./run_docker.sh
+
 - name: pushing green app to my repository
 #  become: true
   shell: |
+    ./run_docker.sh
     ./upload_docker.sh
 
 # run run_docker to verify the builded prediction app
