@@ -16,6 +16,7 @@
   shell: |
     source $HOME/.bash_profile >> tracing.log 2>&1
     PREDICTION=$(./make_prediction.sh)
+
     SUB='NEW ROLLING VERSION'
     if [[ "$STR" == *"$SUB"* ]]; then
       echo "NEW ROLLING VERSION is up and running"

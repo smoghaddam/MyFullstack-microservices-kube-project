@@ -14,7 +14,12 @@ kubectl set image deployment/eli-deploy myproject-repo=eliddocker/myproject-repo
 
 # Step 3:
 # List kubernetes pods
-kubectl rollout status deployments/eli-deploy
+sleep 11
+if [[ $(timeout 5 kubectl rollout status deployments/eli-deploy) != *"successfully rolled out"* ]]; then
+    kubectl rollout undo deployments/eli-deploy
+    echo "rollout rollbacked!"
+    exit 1
+fi
 
 # Step 4:
 # Forward the container port to a host
