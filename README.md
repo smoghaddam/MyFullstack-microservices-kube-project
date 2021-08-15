@@ -1,6 +1,5 @@
 # MyFullstack-microservices-kube-project
 
-## Last deployment status
 [![CircleCI](https://circleci.com/gh/elidzah/MyFullstack-microservices-kube-project/tree/main.svg?style=svg)](https://circleci.com/gh/elidzah/MyFullstack-microservices-kube-project/tree/main)
 
 ## Project Overview
