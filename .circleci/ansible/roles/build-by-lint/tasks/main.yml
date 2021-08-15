@@ -52,7 +52,6 @@
 - name: liting green app
 #  become: true
   shell: |
-    make setup
     source ".{{ envname }}/bin/activate"
     make lint
 
