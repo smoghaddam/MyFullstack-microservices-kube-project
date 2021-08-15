@@ -51,6 +51,8 @@
 - name: liting docker and running application
 #  become: true
   shell: |
+    make setup
+    source ".{{ envname }}/bin/activate"
     make lint
     ./run_docker.sh
 
