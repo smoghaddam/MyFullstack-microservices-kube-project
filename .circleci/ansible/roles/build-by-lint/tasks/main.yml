@@ -41,6 +41,7 @@
 - name: Setting venv, installing hadolint, runnint on docker
 #  become: true
   shell: |
+    echo {{ dockhub }} > my_password.txt
     sudo chmod ugo+rw app.py Dockerfile requirements.txt Makefile
     sed -i 's/_envToSet_/{{ envname }}/g' Makefile
     make setup
@@ -48,21 +49,17 @@
     make install
 
 
-- name: liting docker and running application
+- name: liting green app
 #  become: true
   shell: |
     make setup
     source ".{{ envname }}/bin/activate"
     make lint
-    ./run_docker.sh
 
-# python3 -m venv "{{ envname }}"
-# source "{{ envname }}/bin/activate"
-# cd "{{ envname }}"
-# sudo chmod ugo+rw app.py Dockerfile requirements.txt Makefile
-# sed -i 's/_envToSet_/{{ envname }}/g' Makefile
-# make install
-# # Install hadolint
-# sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
-# sudo chmod +x /bin/hadolint
+- name: pushing green app to my repository
+#  become: true
+  shell: |
+    ./upload_docker.sh
 
+# run run_docker to verify the builded prediction app
+#    ./run_docker.sh

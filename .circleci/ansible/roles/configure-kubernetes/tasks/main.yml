@@ -28,7 +28,6 @@
 
 - name: setting docker-hub credentials
   shell: |
-    echo {{ dockhub }} > my_password.txt
     cat ~/my_password.txt | docker login --username eliddocker --password-stdin >> tracing.log 2>&1
 
 - name: Setting environment variables for kubectl and starting cluster

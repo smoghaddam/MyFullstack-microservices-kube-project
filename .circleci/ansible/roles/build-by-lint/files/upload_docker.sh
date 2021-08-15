@@ -12,6 +12,7 @@ dockerpath=eliddocker/app
 
 # Step 2:
 # Authenticate & tag
+cat ~/my_password.txt | docker login --username eliddocker --password-stdin
 docker tag mydockerapi eliddocker/myproject-repo::udaproject:v2
 
 echo "Docker ID and Image: $dockerpath"

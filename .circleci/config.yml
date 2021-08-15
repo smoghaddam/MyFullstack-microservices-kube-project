@@ -76,10 +76,10 @@ workflows:
               only: [main]
       - configure-docker:
           requires: [deploy-infrastructure]
-      - build-and-lint:
-          requires: [configure-docker]
       - configure-kubernetes:
           requires: [build-and-lint]
+      - build-and-lint:
+          requires: [configure-kubernetes]
       # - configure-hadolint:
       #     requires: [configure-infrastructure]
 
